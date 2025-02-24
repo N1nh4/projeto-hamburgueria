@@ -8,10 +8,19 @@ interface RestaurantPageProps {
 }
 const RestaurantPage = async ({ params }: RestaurantPageProps) => {
     const { slug } = await params;
-    const restaurant = await db.restaurant.findUnique({ where: {slug }});
+    const restaurant = await db.restaurant.findUnique({ 
+        where: { slug },
+        include: { 
+            menuCategories: {
+                include: { products: true }
+            },
+        },
+    });
+
     if (!restaurant) {
         return notFound();
     }
+
     return ( 
         <div className="flex h-screen flex-col items-center justify-center px-6 pt-24">
             {/* LOGO E TITULO */}
